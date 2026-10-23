@@ -1,10 +1,19 @@
-const CACHE_VERSION = 'damage-calculator-v1';
+const CACHE_VERSION = 'damage-calculator-v3';
 const SHELL_CACHE = CACHE_VERSION + '-shell';
 const RUNTIME_CACHE = CACHE_VERSION + '-runtime';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png'];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(SHELL_CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
+  event.waitUntil((async () => {
+    const cache = await caches.open(SHELL_CACHE);
+    // Cache required app files first. Icons are optional so a missing icon
+    // cannot prevent the service worker from installing.
+    await cache.addAll(['./', './index.html', './manifest.webmanifest']);
+    await Promise.all(APP_SHELL.filter(path => path.startsWith('./icons/')).map(async path => {
+      try { await cache.add(path); } catch (_) { /* optional icon unavailable */ }
+    }));
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', event => {
