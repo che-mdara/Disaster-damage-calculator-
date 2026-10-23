@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#123d2b">
+<title>Malawi Disaster Damage Calculator</title>
+<style>
+:root{--green:#155b3b;--green2:#23764e;--lime:#d8f3a5;--ink:#18231d;--muted:#637168;--paper:#f4f7f3;--line:#dce5dc;--white:#fff;--red:#a93226;--amber:#946200;--blue:#245a88;--shadow:0 8px 28px #153e2710}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 14px;font-weight:700;background:var(--green);color:#fff}button.secondary{background:#e7eee8;color:var(--green);border:1px solid var(--line)}button.danger{background:#fff0ee;color:var(--red);border:1px solid #f1c8c2}button.small{padding:7px 10px;font-size:13px}.top{background:linear-gradient(125deg,#103d2b,#216d48);color:white;padding:17px 14px 15px}.topinner,.wrap{max-width:1180px;margin:auto}.brand{display:flex;gap:12px;align-items:center}.heroTag{display:inline-flex;align-items:center;gap:6px;margin-top:9px;padding:5px 9px;border-radius:999px;background:#ffffff18;border:1px solid #ffffff30;font-size:12px;color:#f1fff4}.map-status{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}.map-status span{font-size:12px;color:var(--muted)}#mapBox{height:440px;background:#eaf2e7}#mapBox .mapnote{z-index:500}.gps-readout{font-size:12px;color:var(--muted);margin-top:7px}.mapfilters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:12px}.logo{width:48px;height:48px;border-radius:15px;background:#ffffff20;display:grid;place-items:center;font-size:26px}.top h1{margin:0;font-size:clamp(22px,4vw,32px);letter-spacing:-.5px}.top p{margin:5px 0 0;color:#d9eadf;font-size:14px}.pills{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.pill{font-size:12px;padding:5px 9px;border:1px solid #ffffff40;border-radius:30px;color:#f2fff6}.nav{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);display:flex;overflow-x:auto;gap:5px;padding:8px max(12px,calc((100vw - 1180px)/2))}.nav button{white-space:nowrap;background:transparent;color:#536157;padding:9px 12px}.nav button.active{background:#e6f1e8;color:var(--green)}main{max-width:1180px;margin:auto;padding:18px 14px 50px}.view{display:none}.view.active{display:block}.sectionhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:4px 0 15px}.sectionhead h2{margin:0;font-size:22px;letter-spacing:-.4px}.sectionhead p{margin:4px 0 0;color:var(--muted);font-size:14px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card{background:var(--white);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);min-width:0}.metric .label{font-size:12px;color:var(--muted);font-weight:700}.metric .num{font-size:clamp(23px,3vw,31px);font-weight:800;letter-spacing:-.8px;margin:6px 0 1px;overflow-wrap:anywhere}.metric .sub{font-size:12px;color:var(--muted)}.layout2{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-top:14px}.card h3{margin:0 0 10px;font-size:17px}.muted{color:var(--muted)}.smalltext{font-size:12px;color:var(--muted)}.fieldgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{display:flex;flex-direction:column;gap:5px;min-width:0}.field.full{grid-column:1/-1}label{font-weight:700;font-size:13px;color:#34463a}input,select,textarea{width:100%;min-width:0;border:1px solid #cbd8cd;border-radius:11px;padding:11px;background:#fff;color:var(--ink)}textarea{min-height:78px;resize:vertical}input:focus,select:focus,textarea:focus{outline:3px solid #cde9d2;border-color:var(--green)}.required{color:var(--red)}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.notice{padding:12px 13px;border-radius:12px;background:#eef6e8;border:1px solid #d8e9c9;color:#35572d;font-size:13px;margin:12px 0}.warn{background:#fff7e5;border-color:#f0dfa9;color:#755600}.dangerbox{background:#fff0ee;border-color:#f2c9c4;color:#8d3027}.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:12px}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:13px;background:white}table{width:100%;border-collapse:collapse;min-width:680px}th,td{text-align:left;padding:10px 11px;border-bottom:1px solid #e8eee8;font-size:13px;vertical-align:top}th{background:#f1f6f1;color:#415246;font-size:12px;position:sticky;top:0}tr:last-child td{border-bottom:0}.tag{display:inline-block;border-radius:30px;padding:3px 7px;background:#edf3ee;color:#385542;font-size:11px;font-weight:800}.tag.red{background:#fde9e6;color:#a33226}.tag.amber{background:#fff2d2;color:#8c6000}.tag.blue{background:#e6f0fb;color:#245a88}.bars{display:flex;flex-direction:column;gap:12px}.barrow{display:grid;grid-template-columns:minmax(90px,1fr) 2fr auto;gap:9px;align-items:center;font-size:13px}.bartrack{height:10px;border-radius:10px;background:#e9efe9;overflow:hidden}.barfill{height:100%;background:var(--green2);border-radius:10px}.empty{padding:26px;text-align:center;color:var(--muted)}.mapbox{height:310px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background-color:#edf4ec;background-image:linear-gradient(#d7e4d7 1px,transparent 1px),linear-gradient(90deg,#d7e4d7 1px,transparent 1px);background-size:30px 30px;position:relative}.mapnote{position:absolute;left:12px;right:12px;bottom:10px;background:#ffffffeb;border-radius:10px;padding:8px 10px;font-size:12px;color:#526156}.pin{position:absolute;transform:translate(-50%,-100%);border:2px solid white;border-radius:18px 18px 18px 3px;padding:5px 7px;background:#155b3b;color:white;font-size:11px;font-weight:800;box-shadow:0 2px 8px #0002;max-width:140px;white-space:nowrap}.pin.high{background:#a93226}.pin.mid{background:#a16b00}.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.legend span{font-size:12px;color:var(--muted)}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}.seasoncompare{display:grid;grid-template-columns:1fr 1fr;gap:12px}.comparebox{background:#f5f8f5;border-radius:13px;padding:13px}.comparebox strong{font-size:22px;display:block}.foot{margin-top:20px;padding:16px 4px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}.hide{display:none!important}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#163e2b;color:white;border-radius:12px;padding:12px 16px;max-width:90vw;box-shadow:0 5px 22px #0003;z-index:20;display:none}.step{display:flex;align-items:center;gap:8px;margin:0 0 14px}.step span{width:28px;height:28px;border-radius:50%;background:#e6f0e7;color:var(--green);display:grid;place-items:center;font-weight:800;font-size:13px}.step strong{font-size:14px}.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.inline input{flex:1;min-width:120px}
+@media(max-width:800px){.mapfilters{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout2{grid-template-columns:1fr}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding-top:18px}.card{padding:14px}}
+@media(max-width:460px){#mapBox{height:360px}.mapfilters{grid-template-columns:1fr 1fr}main{padding:14px 10px 35px}.fieldgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.grid{gap:8px}.metric{padding:12px}.filters{grid-template-columns:1fr 1fr}.sectionhead{display:block}.sectionhead .actions{margin-top:10px}.barrow{grid-template-columns:90px 1fr auto}.nav{padding-left:8px;padding-right:8px}}
+@media print{.top,.nav,.noprint,button,.foot{display:none!important}body{background:white}main{padding:0}.view{display:none!important}.view.active{display:block!important}.card{box-shadow:none;break-inside:avoid}.tablewrap{overflow:visible}table{min-width:0}th,td{font-size:10px;padding:5px}}
+
+/* Final interface: clear, mobile-first field workflow */
+:root{--green:#126344;--green2:#21865c;--lime:#d9f99d;--paper:#f3f7f5;--line:#d9e6df;--shadow:0 10px 30px #123d2b12}
+body{background:linear-gradient(180deg,#edf6f0 0,#f7f9f7 300px);line-height:1.52}
+.top{padding:22px 16px 20px;background:radial-gradient(circle at 90% 0%,#3b9b70 0,transparent 38%),linear-gradient(130deg,#0c3928,#176b49 70%,#24835b)}
+.logo{box-shadow:0 8px 22px #061f1630;border:1px solid #ffffff40}
+.top h1{letter-spacing:-.7px}.top p{font-size:15px}
+.nav{box-shadow:0 5px 16px #143c2510;scrollbar-width:thin}.nav button{border-radius:999px}.nav button.active{background:#dff4e5;color:#0c603e;box-shadow:inset 0 0 0 1px #c1e5ce}
+main{padding-top:22px}.view.active{animation:fadeIn .22s ease-out}@keyframes fadeIn{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:none}}
+.card,.form-card,.mapbox,.notice,.filters{border-radius:18px}.card{border:1px solid #e1eae4;box-shadow:var(--shadow);padding:18px}
+.sectionhead{align-items:center;margin-bottom:16px}.sectionhead h2{font-size:clamp(21px,3.6vw,28px);letter-spacing:-.45px;margin-bottom:5px}.sectionhead p{max-width:690px}
+.grid{gap:13px}.metric{transition:transform .15s ease,box-shadow .15s ease}.metric:hover{transform:translateY(-2px);box-shadow:0 14px 30px #123d2b18}.metric .num{font-size:clamp(24px,4vw,32px);letter-spacing:-.5px}
+.field label{font-weight:750;color:#243a2e;margin-bottom:6px}.field input,.field select,.field textarea,input[type=file]{width:100%;border:1px solid #cbdad0;border-radius:12px;background:#fff;padding:12px 13px;min-height:46px;color:var(--ink);box-shadow:0 1px 2px #153e2707}.field textarea{min-height:96px}.field input:focus,.field select:focus,.field textarea:focus{outline:3px solid #bde8cc;border-color:#21865c}
+button{border-radius:12px;box-shadow:0 2px 4px #123d2b0c;transition:filter .15s,transform .15s}button:hover{filter:brightness(1.04);transform:translateY(-1px)}button:focus-visible{outline:3px solid #a9dfbc;outline-offset:2px}
+.step{padding:12px 14px;border-radius:13px;background:#eaf5ed;border:1px solid #d4e9db;margin:8px 0 15px}.step span{background:#176b49;box-shadow:0 2px 5px #176b4930}
+.smalltext,.sub{line-height:1.5}.empty{border-radius:12px;background:#f5f8f6;padding:15px;border:1px dashed #d1dfd6}
+.notice{padding:14px 16px;border-radius:14px}.notice.warn{background:#fff8e7;border-color:#f2dfa8}
+.quick-guide{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 18px}.guide-tile{background:#fff;border:1px solid #dfeae3;border-radius:16px;padding:15px;box-shadow:var(--shadow);display:flex;gap:11px;align-items:flex-start}.guide-icon{width:38px;height:38px;flex:0 0 38px;display:grid;place-items:center;border-radius:12px;background:#e5f5e9;font-size:20px}.guide-tile strong{display:block;margin:1px 0 3px;color:#164b34}.guide-tile p{font-size:13px;color:#607067;margin:0}.field-help{display:block;font-size:12px;line-height:1.4;color:#66776c;margin-top:5px}.page-tip{border-left:4px solid #21865c;background:#eaf5ed;padding:11px 13px;border-radius:0 12px 12px 0;color:#345443;font-size:13px;margin:0 0 15px}
+@media(max-width:700px){main{padding:14px 10px 35px}.top{padding:18px 12px}.logo{width:43px;height:43px}.nav{padding:7px 9px}.nav button{padding:9px 11px;font-size:13px}.card{padding:14px}.quick-guide{grid-template-columns:1fr}.guide-tile{padding:12px}.sectionhead{align-items:flex-start;gap:10px}.mapfilters{grid-template-columns:repeat(2,minmax(0,1fr))}#mapBox{height:330px}.actions button{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+
+/* Malawi flag-inspired home header */
+.top{padding:0 16px 24px;background:radial-gradient(circle at 88% 0%,#3b9b70 0,transparent 36%),linear-gradient(130deg,#092f21,#176b49 68%,#23845b)}
+.flag-stripe{height:5px;display:flex;gap:0;margin:0 -16px 20px}.flag-stripe span{flex:1}.flag-stripe span:nth-child(1){background:#111}.flag-stripe span:nth-child(2){background:#d9252a}.flag-stripe span:nth-child(3){background:#168447}
+.brandrow{display:flex;align-items:center;gap:14px}.brandrow .logo{width:58px;height:58px;flex:0 0 58px;border-radius:18px;background:#ffffff20;border:1px solid #ffffff48;font-size:29px}
+.top h1{font-size:clamp(27px,5vw,39px);line-height:1.08;letter-spacing:-1px}.top p{font-size:15px;color:#e1f2e6;margin-top:7px}
+
+.quick-actions{display:flex;gap:10px;flex-wrap:wrap}.quick-actions button{min-height:46px;padding:12px 16px}.quick-actions .primary{background:#d9f99d;color:#123d2b}.quick-actions .secondary{background:#ffffff12;color:white;border:1px solid #ffffff58}
+.view#map{display:none!important}
+@media(max-width:600px){.top{padding:0 12px 20px}.flag-stripe{margin-left:-12px;margin-right:-12px;margin-bottom:17px}.brandrow .logo{width:48px;height:48px;flex-basis:48px;font-size:24px}.quick-actions{display:grid;grid-template-columns:1fr}.quick-actions button{width:100%}}
+
+
+
+/* Final header inspired by the original v17 design, with Malawi-colour stripe */
+.top{position:relative;overflow:hidden;padding:28px 16px 26px;background:radial-gradient(circle at 88% 20%,rgba(255,255,255,.16),transparent 28%),linear-gradient(135deg,#092d20 0%,#17633b 52%,#4b8e50 100%)}
+.flag-stripe{height:6px;display:flex;gap:0;margin:-28px -16px 20px}.flag-stripe span{flex:1}.flag-stripe span:nth-child(1){background:#111}.flag-stripe span:nth-child(2){background:#d9252a}.flag-stripe span:nth-child(3){background:#168447}
+.top:after{content:"";position:absolute;width:240px;height:240px;border:38px solid rgba(255,255,255,.07);border-radius:50%;right:-70px;top:-110px;pointer-events:none}
+.topinner{position:relative;z-index:1;max-width:1050px;margin:auto}
+.brandrow .logo{display:grid;place-items:center;width:56px;height:56px;flex:0 0 56px;border-radius:18px;background:#fff;color:#17633b;font-size:28px;box-shadow:0 6px 18px #001b0d35;border:3px solid #dcebd4}
+.top h1{font-size:clamp(25px,4.5vw,36px);line-height:1.12;letter-spacing:-.8px}
+.top p{color:#e2f0d9;font-size:14px;margin-top:6px}
+.quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px;max-width:620px}
+.quick-actions button{display:flex;align-items:center;justify-content:center;gap:9px;min-height:58px;padding:12px 14px;border-radius:14px;white-space:normal;text-align:center}
+.quick-actions .primary{background:linear-gradient(135deg,#d9f99d,#bde77b);color:#123d2b;box-shadow:0 5px 14px #001b0d25}
+.quick-actions .secondary{background:#ffffff12;color:#fff;border:1px solid #ffffff58}
+.action-icon{width:29px;height:29px;flex:0 0 29px;border-radius:9px;display:inline-grid;place-items:center;background:#ffffff25;font-size:21px;line-height:1}
+.quick-actions .primary .action-icon{background:#123d2b12}
+.toast{display:none!important}
+@media(max-width:600px){.top{padding:23px 12px 21px}.flag-stripe{margin:-23px -12px 18px}.brandrow{gap:11px}.brandrow .logo{width:48px;height:48px;flex-basis:48px;font-size:24px}.quick-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quick-actions button{min-height:66px;padding:9px 7px;gap:6px;font-size:13px}.action-icon{width:26px;height:26px;flex-basis:26px;font-size:19px}}
+
+</style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<meta name="description" content="Record disaster damage, affected households, locations and urgent needs." />
+<meta name="application-name" content="Disaster Damage Calculator" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Damage Calculator" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icons/icon-192.png" type="image/png" />
+<link rel="apple-touch-icon" href="./icons/icon-192.png" />
+
+</head>
+<body>
+<header class="top">
+ <div class="flag-stripe" aria-hidden="true"><span></span><span></span><span></span></div>
+ <div class="topinner">
+  <div class="brandrow"><div class="logo" aria-hidden="true">🌦️</div><div><h1>Disaster Damage Calculator</h1><p>Record disaster damage, affected households and urgent needs.</p></div></div>
+  <div class="quick-actions"><button type="button" id="startAssessment" class="primary"><span class="action-icon" aria-hidden="true">＋</span><span>New assessment</span></button><button type="button" id="jumpSaved" class="secondary"><span class="action-icon" aria-hidden="true">▤</span><span>View records</span></button></div>
+ </div>
+</header>
+<nav class="nav noprint" aria-label="Main navigation">
+<button class="active" data-view="dashboard">🏠 Overview</button><button data-view="assessment">➕ Add assessment</button><button data-view="records">📋 Saved records</button><button data-view="villages">📊 Compare seasons</button><button data-view="reports">💾 Reports & backup</button>
+</nav>
+<main>
+<section class="view active" id="dashboard">
+ <div class="quick-guide" aria-label="How to use the app">
+  <div class="guide-tile"><div class="guide-icon">📝</div><div><strong>1. Record an impact</strong><p>Tap “Add assessment” and enter details for one household or assessment record.</p></div></div>
+  <div class="guide-tile"><div class="guide-icon">📍</div><div><strong>2. Add the location</strong><p>Choose a district, type the TA and village, then try GPS if your phone allows it.</p></div></div>
+  <div class="guide-tile"><div class="guide-icon">📊</div><div><strong>3. Save and review</strong><p>Save the form. Totals, saved records and map points update from the information entered.</p></div></div>
+ </div>
+ <div class="sectionhead"><div><h2>Disaster damage overview</h2><p>Review recorded impacts and assessment totals.</p></div><div class="actions noprint"><button id="newBtn">＋ New assessment</button></div></div>
+ <div class="filters noprint">
+  <div class="field"><label for="fDistrict">District</label><select id="fDistrict"><option value="">All districts</option></select></div>
+  <div class="field"><label for="fTA">Filter by TA (optional)</label><input id="fTA" placeholder="Type TA name"></div>
+  <div class="field"><label for="fHazard">Hazard</label><select id="fHazard"><option value="">All hazards</option></select></div>
+  <div class="field"><label for="fSeason">Season / period</label><select id="fSeason"><option value="">All seasons</option></select></div>
+ </div>
+ <div class="grid">
+  <div class="card metric"><div class="label">ASSESSMENT RECORDS</div><div class="num" id="mRecords">0</div><div class="sub">Saved records in current filter</div></div>
+  <div class="card metric"><div class="label">VILLAGES RECORDED</div><div class="num" id="mVillages">0</div><div class="sub">Distinct named villages</div></div>
+  <div class="card metric"><div class="label">DAMAGED HOUSEHOLDS</div><div class="num" id="mHomes">0</div><div class="sub">Records reporting house damage</div></div>
+  <div class="card metric"><div class="label">PEOPLE AFFECTED</div><div class="num" id="mPeople">0</div><div class="sub">Reported, not independently verified</div></div>
+  <div class="card metric"><div class="label">INJURIES REPORTED</div><div class="num" id="mInjured">0</div><div class="sub">Across filtered records</div></div>
+  <div class="card metric"><div class="label">DEATHS REPORTED</div><div class="num" id="mDeaths">0</div><div class="sub">Handle and verify sensitively</div></div>
+  <div class="card metric"><div class="label">CROP LOSS ESTIMATE</div><div class="num" id="mCrop">MWK 0</div><div class="sub">Entered estimates only</div></div>
+  <div class="card metric"><div class="label">TOTAL ESTIMATED LOSS</div><div class="num" id="mLoss">MWK 0</div><div class="sub">House + crop loss estimates</div></div>
+ </div>
+ <div class="layout2">
+  <div class="card"><h3>Villages with highest recorded impact</h3><p class="smalltext">Ranked by recorded affected people and damaged-household records. This is not a forecast of future risk.</p><div class="bars" id="topVillages"><div class="empty">Add or load assessment records to see village summaries.</div></div></div>
+  <div class="card"><h3>Check your data</h3><p class="smalltext">This checks for missing details or possible duplicates. Please review the flagged records yourself.</p><div id="qualitySummary" class="empty">No checks run yet.</div><div class="actions"><button class="secondary" id="runChecksBtn">Check records</button><button class="secondary" id="goRecordsBtn">Review records</button></div></div>
+ </div>
+ <div class="notice warn"><strong>Important:</strong> Totals come from what users enter. Check records against field forms before using them for official reports or aid decisions.</div>
+</section>
+<section class="view" id="assessment">
+ <div class="sectionhead"><div><h2 id="formHeading">Add a disaster impact record</h2><p>Enter information for one household at a time. Your record is saved in this browser on this device.</p></div></div>
+ <form id="assessmentForm" class="card">
+  <input type="hidden" id="editKey">
+  <div class="step"><span>1</span><strong>Where and when did it happen?</strong></div><p class="page-tip">Start with the date, disaster type and location. Fields marked * must be completed before saving.</p>
+  <div class="fieldgrid">
+   <div class="field"><label for="aDate">Assessment date <span class="required">*</span></label><input id="aDate" type="date" required></div>
+   <div class="field"><label for="aSeason">Season / reporting period <span class="required">*</span></label><input id="aSeason" placeholder="e.g. 2025–2026" required><small class="field-help">Use the same season format for every record, for example 2025–2026.</small></div>
+   <div class="field"><label for="aHazard">Hazard type <span class="required">*</span></label><select id="aHazard" required><option value="">Select hazard</option><option>Flood</option><option>Dry spell / drought</option><option>Strong winds</option><option>Cyclone / storm</option><option>Heavy rainfall</option><option>Landslide / erosion</option><option>Fire</option><option>Pest / crop disease</option><option>Other</option></select></div>
+   <div class="field"><label for="aEvent">Event name / reference</label><input id="aEvent" placeholder="e.g. January windstorm"></div>
+   <div class="field"><label for="aDistrict">District <span class="required">*</span></label><select id="aDistrict" required><option value="">Choose district</option></select></div>
+   <div class="field"><label for="aTA">Traditional Authority (TA) — optional</label><input id="aTA" placeholder="Type the TA name"></div>
+   <div class="field"><label for="aVillage">Village <span class="required">*</span></label><input id="aVillage" placeholder="Village name" required></div>
+   <div class="field"><label for="aHH">Household reference code <span class="required">*</span></label><input id="aHH" placeholder="Enter your approved household code" required></div>
+  </div>
+  <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+  <div class="step"><span>2</span><strong>What was affected?</strong></div><p class="page-tip">Enter the number of people and the damage you observed. Use 0 only when you confirmed there were none; choose “unknown” when you could not assess it.</p>
+  <div class="fieldgrid">
+   <div class="field"><label for="aMembers">Household members</label><input id="aMembers" type="number" min="0" step="1" value="0"></div>
+   <div class="field"><label for="aAffected">People affected</label><input id="aAffected" type="number" min="0" step="1" value="0"><small class="field-help">People whose lives or living conditions were impacted by the event.</small></div>
+   <div class="field"><label for="aInjured">People injured</label><input id="aInjured" type="number" min="0" step="1" value="0"></div>
+   <div class="field"><label for="aDeaths">Deaths reported</label><input id="aDeaths" type="number" min="0" step="1" value="0"></div>
+   <div class="field"><label for="aDisplaced">People displaced</label><input id="aDisplaced" type="number" min="0" step="1" value="0"><small class="field-help">People forced to leave their homes because of the disaster.</small></div>
+   <div class="field"><label for="aHouse">House damage</label><select id="aHouse"><option value="None">None reported</option><option value="Partial">Partial</option><option value="Severe">Severe</option><option value="Destroyed">Destroyed</option><option value="Unknown">Not assessed / unknown</option></select></div>
+   <div class="field"><label for="aCrop">Crop damage</label><select id="aCrop"><option value="Unknown">Not assessed / unknown</option><option value="No">No</option><option value="Yes">Yes</option></select></div>
+   <div class="field"><label for="aHouseLoss">Estimated house / property damage (MWK)</label><input id="aHouseLoss" type="number" min="0" step="1" value="0"><small class="field-help">Approximate monetary value of damage. Use an approved valuation method.</small></div>
+   <div class="field"><label for="aCropLoss">Estimated crop loss (MWK)</label><input id="aCropLoss" type="number" min="0" step="1" value="0"></div>
+   <div class="field"><label for="aNeeds">Urgent needs</label><input id="aNeeds" placeholder="e.g. shelter materials, food, safe water"></div>
+   <div class="field full"><label for="aNotes">Notes (optional)</label><textarea id="aNotes" placeholder="What did you observe? Add a form reference or follow-up note. Do not enter unnecessary personal details."></textarea></div>
+  </div>
+  <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+  <div class="step"><span>3</span><strong>GPS and review status</strong></div><p class="page-tip">GPS adds map coordinates. If it fails, you can still save the assessment without coordinates.</p>
+  <div class="fieldgrid">
+   <div class="field"><label for="aLat">Latitude</label><input id="aLat" type="number" step="any" min="-90" max="90" placeholder="-13.95"></div>
+   <div class="field"><label for="aLon">Longitude</label><input id="aLon" type="number" step="any" min="-180" max="180" placeholder="33.78"></div>
+   <div class="field full"><div id="gpsReadout" class="gps-readout">GPS not added yet. Tap “Get my GPS location” and allow location access if asked.</div></div>
+   <div class="field"><label for="aStatus">How checked is this record?</label><select id="aStatus"><option>Unverified</option><option>Reviewed</option><option>Verified</option><option>Follow-up required</option></select></div>
+   <div class="field"><label for="aAssessor">Assessor / team code</label><input id="aAssessor" placeholder="Use an approved staff/team code"></div>
+  </div>
+  <div class="actions"><button type="button" id="gpsBtn">📍 Get my GPS location</button><button type="submit" id="saveBtn">Save record</button><button type="button" class="secondary" id="clearFormBtn">Clear entries</button><button type="button" class="danger hide" id="cancelEditBtn">Cancel edit</button></div>
+  <div id="formMsg" class="notice hide" role="status"></div>
+ </form>
+</section>
+<section class="view" id="records">
+ <div class="sectionhead"><div><h2>Assessment records</h2><p>Search, review or edit saved records. Deleting a record is permanent on this device unless you have a backup.</p></div><div class="actions noprint"><button id="recordsExportBtn" class="secondary">Export filtered CSV</button><button id="recordsNewBtn">+ New assessment</button></div></div>
+ <div class="card">
+  <div class="filters"><div class="field"><label for="recordSearch">Search</label><input id="recordSearch" placeholder="Village, ID, district, hazard…"></div><div class="field"><label for="recordStatus">Status</label><select id="recordStatus"><option value="">All statuses</option><option>Unverified</option><option>Reviewed</option><option>Verified</option><option>Follow-up required</option></select></div><div class="field"><label for="recordSeason">Season</label><select id="recordSeason"><option value="">All seasons</option></select></div><div class="field"><label>&nbsp;</label><button class="secondary" id="resetRecordFilters">Clear filters</button></div></div>
+  <div id="recordCount" class="smalltext" style="margin:8px 0 10px">0 records</div>
+  <div class="tablewrap"><table><thead><tr><th>Date / season</th><th>Location</th><th>Hazard</th><th>Impacts</th><th>Loss estimate</th><th>Status</th><th class="noprint">Actions</th></tr></thead><tbody id="recordRows"></tbody></table></div>
+  <div id="recordsEmpty" class="empty">No records saved yet. Start a new assessment to add the first record.</div>
+ </div>
+</section>
+<section class="view" id="villages">
+ <div class="sectionhead"><div><h2>Compare two seasons</h2><p>See how the recorded impacts differ between two reporting seasons. Compare like with like where possible.</p></div><button class="secondary noprint" id="villageCsvBtn">Export village summary</button></div>
+ <div class="card">
+  <div class="fieldgrid">
+   <div class="field"><label for="seasonOne">Season A</label><select id="seasonOne"><option value="">Choose season</option></select></div>
+   <div class="field"><label for="seasonTwo">Season B</label><select id="seasonTwo"><option value="">Choose season</option></select></div>
+  </div>
+  <div class="actions noprint"><button id="compareBtn">Compare seasons</button></div>
+  <div id="comparisonOutput" style="margin-top:14px"><div class="empty">Choose two seasons to compare recorded impacts.</div></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>Village summary for current dashboard filters</h3><div class="tablewrap"><table><thead><tr><th>Village / TA / district</th><th>Records</th><th>Households assessed</th><th>House damage records</th><th>Affected people</th><th>Deaths</th><th>Crop loss estimate</th><th>Seasons seen</th></tr></thead><tbody id="villageRows"></tbody></table></div><div id="villageEmpty" class="empty">No village summaries to display.</div></div>
+</section>
+<section class="view" id="map">
+ <div class="sectionhead"><div><h2>Map of recorded impacts</h2><p>See saved assessment locations on the map. Internet is needed for the background map; GPS points appear only when coordinates were saved.</p></div><button class="secondary noprint" id="mapCsvBtn">Export coordinates</button></div>
+ <div class="card">
+  <div class="mapfilters">
+   <div class="field"><label for="mapDistrict">District</label><select id="mapDistrict"><option value="">All districts</option></select></div>
+   <div class="field"><label for="mapTA">Filter by TA (optional)</label><input id="mapTA" placeholder="Type TA name"></div>
+   <div class="field"><label for="mapHazard">Hazard</label><select id="mapHazard"><option value="">All hazards</option></select></div>
+   <div class="field"><label for="mapSeason">Season</label><select id="mapSeason"><option value="">All seasons</option></select></div>
+  </div>
+  <div class="map-status"><strong id="mapMode">Map starting…</strong><span id="mapCount">No points loaded yet.</span></div>
+  <div class="mapbox" id="mapBox"><div class="mapnote">Starting map. GPS points appear after assessments with valid coordinates have been saved.</div></div>
+  <div class="legend"><span><i class="dot" style="background:#155b3b"></i>Lower recorded impact</span><span><i class="dot" style="background:#a16b00"></i>Moderate recorded impact</span><span><i class="dot" style="background:#a93226"></i>Higher recorded impact</span></div>
+  <div class="notice warn">Internet is needed for the background map. GPS capture needs device location enabled and browser permission; some browsers require the app to be opened through HTTPS. Without internet, the app will show a coordinate plot instead. Pins represent assessment locations, not official district/TA boundaries.</div>
+  <div id="mapSummary" class="smalltext"></div>
+ </div>
+</section>
+<section class="view" id="reports">
+ <div class="sectionhead"><div><h2>Reports and data backup</h2><p>Download a backup regularly. Your records do not automatically move to another phone or browser.</p></div></div>
+ <div class="grid">
+  <div class="card"><h3>Printable summary report</h3><p class="smalltext">Create a print-ready summary using the dashboard filters, including key totals, village ranking and data-verification notes.</p><button id="printReportBtn">Generate / print report</button></div>
+  <div class="card"><h3>Download records for Excel</h3><p class="smalltext">Download all saved records as a CSV file for spreadsheets or approved analysis.</p><button id="allCsvBtn" class="secondary">Download all CSV</button></div>
+  <div class="card"><h3>Back up saved records</h3><p class="smalltext">Save a JSON backup containing records and app metadata. Keep it somewhere secure.</p><button id="backupBtn">Download JSON backup</button></div>
+  <div class="card"><h3>Restore a backup file</h3><p class="smalltext">Import a backup from this app. Existing records will be merged by record ID; review totals after import.</p><input id="restoreFile" type="file" accept=".json,application/json"><button id="restoreBtn" class="secondary" style="margin-top:8px">Restore / merge backup</button></div>
+ </div>
+ <div class="card" style="margin-top:14px"><h3>Data and deployment notes</h3><ul>
+  <li>Records are stored in this browser on this device. There is no automatic cloud sync or shared district database.</li>
+  <li>GPS capture requires browser permission and may require HTTPS or a supported browser context; manual coordinates are available.</li>
+  <li>Exported files can contain sensitive data. Store and share them only under approved council procedures.</li>
+  <li>For actual district deployment, add a managed backend, authenticated user accounts, server-side permissions, encrypted transport/storage, protected audit logs, tested backups and a written data-retention policy.</li>
+  <li>Use the current approved government assessment forms and obtain authorisation before collecting real household data.</li>
+ </ul><div class="actions"><button class="danger" id="clearAllBtn">Delete all saved records</button></div><p class="smalltext">Delete-all is irreversible unless a backup exists and will ask for confirmation.</p></div>
+</section>
+</main>
+<script>
+(function(){
+'use strict';
+const KEY='villageRiskMapper_p28_records';
+
+const MALAWI_DISTRICTS = [
+'Balaka','Blantyre','Chikwawa','Chiradzulu','Chitipa','Dedza','Dowa','Karonga','Kasungu','Likoma','Lilongwe','Machinga','Mangochi','Mchinji','Mulanje','Mwanza','Mzimba','Nkhata Bay','Neno','Nkhotakota','Nsanje','Ntcheu','Ntchisi','Phalombe','Rumphi','Salima','Thyolo','Zomba',
+'Blantyre City','Lilongwe City','Mzuzu City','Zomba City'
+];
+const TA_BY_DISTRICT = {
+'Balaka':['Kalembo','Amidu','Nsamala','Phalula','Chanthunya','Other / not listed'],
+'Blantyre':['Kuntaja','Machinjiri','Kapeni','Somba','Chigalu','Other / not listed'],
+'Chikwawa':['Maseya','Ngabu','Lundu','Kasisi','Chapananga','Katunga','Other / not listed'],
+'Chiradzulu':['Mpama','Likoswe','Chitera','Odilo','Ntchema','Other / not listed'],
+'Chitipa':['Kameme','Mwabulambya','Nthalire','Wimbe','Mwenewenya','Other / not listed'],
+'Dedza':['Kachindamoto','Kamenyagwaza','Kasumbu','Tambala','Pemba','Chilikumwendo','Other / not listed'],
+'Dowa':['Chakhaza','Dzoole','Kayembe','Mponela','Mkukula','Other / not listed'],
+'Karonga':['Kyungu','Mwakaboko','Wasambo','Kilupula','Other / not listed'],
+'Kasungu':['Chulu','Kaomba','Chisikwa','Simlemba','Kalimanjira','Njombwa','Other / not listed'],
+'Likoma':['Likoma','Other / not listed'],
+'Lilongwe':['Chitukula','Chimutu','Kalumbu','Mazengera','Malili','Tsabango','Chiseka','Bunda','Chisiyo','Masumbankhunda','Chadza','Kalimanjira','Njewa','Khongoni','Other / not listed'],
+'Machinga':['Chikweo','Chamba','Mposa','Nyambi','Mlomba','Nsanama','Other / not listed'],
+'Mangochi':['Jalasi','Chowe','Mponda','Nankumba','Makanjira','Bwananyambi','Katuli','Namavi','Other / not listed'],
+'Mchinji':['Mavwere','Zulu','Mkanda','Dambe','Pitala','Mduwa','Other / not listed'],
+'Mulanje':['Juma','Njema','Chikumbu','Nkanda','Sitambe','Mabuka','Other / not listed'],
+'Mwanza':['Nthache','Kanduku','Govati','Other / not listed'],
+'Mzimba':['Mtwalo','Mabulabo','Mpherembe','Embangweni','Jere','Khosolo','Mzukuzuku','Other / not listed'],
+'Neno':['Symon','Chekucheku','Dambe','Other / not listed'],
+'Nkhotakota':['Kanyenda','Mwansambo','Mphonde','Kafuzira','Malengachanzi','Other / not listed'],
+'Nsanje':['Tengani','Mlolo','Mbenje','Ndamera','Sangadzi','Other / not listed'],
+'Ntcheu':['Tsikulamowa','Njolomole','Ganya','Chakhumbira','Makwangwala','Masasa','Phambala','Other / not listed'],
+'Ntchisi':['Chikho','Nthalire','Malenga','Kasakula','Other / not listed'],
+'Phalombe':['Kaduya','Nkhulambe','Nazombe','Chiwalo','Other / not listed'],
+'Rumphi':['Chikulamayembe','Mwamlowe','Zolowere','Katumbi','Other / not listed'],
+'Salima':['Pemba','Kambwiri','Maganga','Khombedza','Ndindi','Other / not listed'],
+'Thyolo':['Mabuka','Bvumbwe','Chimaliro','Ngolongoliwa','Mphuka','Mikolongwe','Other / not listed'],
+'Zomba':['Chikowi','Mlumbe','Nkagula','Ngwelero','Kuntumanji','Chilipa','Other / not listed'],
+'Blantyre City':['City area / ward','Other / not listed'],
+'Lilongwe City':['City area / ward','Other / not listed'],
+'Mzuzu City':['City area / ward','Other / not listed'],
+'Zomba City':['City area / ward','Other / not listed']
+};
+// Full administrative lists load from Open Admin Data when online and are cached on this device.
+// If the first launch is offline, the smaller built-in list remains available.
+const ADMIN_CACHE_KEY='villageRiskMapper_p28_admin_cache';
+let API_DISTRICTS=[];
+let API_TAS=[];
+let TA_LOOKUP={};
+let ADMIN_LIST_STATUS='Using built-in list';
+function cleanDistrictName(name){
+ let s=String(name||'').trim().replace(/_/g,' ');
+ if(/^nkhatabay$/i.test(s)) s='Nkhata Bay';
+ return s;
+}
+function districtKey(name){
+ return cleanDistrictName(name).toLowerCase().replace(/\b(district|city|council)\b/g,'').replace(/[^a-z]/g,'');
+}
+function cleanTAName(name){return String(name||'').replace(/^(STA|TA)\s+/i,'').trim();}
+function districtsForUI(){
+ // Keep the known Malawi district names available even when the online service
+ // uses different spellings or is unavailable.
+ const apiNames=API_DISTRICTS.map(x=>cleanDistrictName(x.name_en||x.name?.en||x.name?.local||x.name)).filter(Boolean);
+ return [...new Set([...MALAWI_DISTRICTS,...apiNames])].sort((a,b)=>a.localeCompare(b));
+}
+function tasForDistrict(districtName){
+ const key=districtKey(districtName);
+ const builtInKey=Object.keys(TA_BY_DISTRICT).find(k=>districtKey(k)===key);
+ const builtIn=builtInKey ? TA_BY_DISTRICT[builtInKey].filter(x=>x!=='Other / not listed') : [];
+ const d=API_DISTRICTS.find(x=>districtKey(x.name_en||x.name?.en||x.name?.local||x.name)===key);
+ let names=[];
+ if(d && API_TAS.length){
+   const districtId=String(d.id??d.entity_id??'');
+   const linked=API_TAS.filter(t=>{
+     const parent=t.parent_id ?? t.parentId ?? t.parent?.id ?? t.district_id ?? t.districtId ?? t.district?.id ?? t.parent_entity_id;
+     const id=String(t.id??t.entity_id??'');
+     const parentValue=parent!=null && typeof parent==='object' ? (parent.id??parent.entity_id??'') : parent;
+     const parentMatches=parentValue!=null && String(parentValue)===districtId;
+     const idMatches=!!districtId && (id.startsWith(districtId+'-') || id.startsWith(districtId+'_') || id.startsWith(districtId+'.'));
+     const districtNameOnTA=t.district_name||t.district?.name_en||t.district?.name?.en||t.parent_name;
+     return parentMatches || idMatches || (districtNameOnTA && districtKey(districtNameOnTA)===key);
+   });
+   names=linked.map(t=>cleanTAName(t.name_en||t.name?.en||t.name?.local||t.name||t.label)).filter(Boolean);
+ }
+ // Union remote results with district-specific built-in suggestions so the TA
+ // selector stays usable if the remote schema or service fails.
+ const merged=[...new Set([...builtIn,...names].filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+ return merged.length ? merged : ['Other / not listed'];
+}
+function syncTaLookup(){
+ TA_LOOKUP={};
+ districtsForUI().forEach(d=>TA_LOOKUP[d]=tasForDistrict(d));
+}
+
+// Districts remain selectable; TAs are typed freely to avoid broken/incomplete lists.
+function refreshLocationSelectors(){
+ const district=$('aDistrict'), mapDistrict=$('mapDistrict');
+ if(!district || !mapDistrict) return;
+ const districts=[...new Set([...MALAWI_DISTRICTS,...API_DISTRICTS.map(x=>cleanDistrictName(x.name_en||x.name?.en||x.name?.local||x.name)).filter(Boolean)])].sort((a,b)=>a.localeCompare(b));
+ const oldDistrict=district.value, oldMapDistrict=mapDistrict.value;
+ district.innerHTML='<option value="">Choose district</option>'+districts.map(d=>'<option value="'+esc(d)+'">'+esc(d)+'</option>').join('');
+ mapDistrict.innerHTML='<option value="">All districts</option>'+districts.map(d=>'<option value="'+esc(d)+'">'+esc(d)+'</option>').join('');
+ if(districts.includes(oldDistrict)) district.value=oldDistrict;
+ if(districts.includes(oldMapDistrict)) mapDistrict.value=oldMapDistrict;
+}
+async function loadFullAdministrativeLists(){
+ try{
+  const [districtResponse,taResponse]=await Promise.all([
+   fetch('https://api.openadmindata.org/api/v1/mw/district.json',{cache:'no-store'}),
+   fetch('https://api.openadmindata.org/api/v1/mw/ta.json',{cache:'no-store'})
+  ]);
+  if(!districtResponse.ok||!taResponse.ok) throw new Error('Administrative list service unavailable');
+  const [districtData,taData]=await Promise.all([districtResponse.json(),taResponse.json()]);
+  if(!Array.isArray(districtData.entities)||!Array.isArray(taData.entities)||districtData.entities.length<28||taData.entities.length<200) throw new Error('Administrative list data incomplete');
+  API_DISTRICTS=districtData.entities;
+  API_TAS=taData.entities;
+  localStorage.setItem(ADMIN_CACHE_KEY,JSON.stringify({districts:API_DISTRICTS,tas:API_TAS,savedAt:new Date().toISOString()}));
+  ADMIN_LIST_STATUS='Full list loaded: '+API_DISTRICTS.length+' districts/city districts and '+API_TAS.length+' TA/local-area entries';
+ }catch(e){
+  try{
+   const cached=JSON.parse(localStorage.getItem(ADMIN_CACHE_KEY)||'null');
+   if(cached&&Array.isArray(cached.districts)&&Array.isArray(cached.tas)&&cached.districts.length>=28&&cached.tas.length>=200){
+    API_DISTRICTS=cached.districts;API_TAS=cached.tas;
+    ADMIN_LIST_STATUS='Using full list saved on this device (offline)';
+   }else{ADMIN_LIST_STATUS='Online list unavailable — using built-in TA suggestions';}
+  }catch(_){ADMIN_LIST_STATUS='Online list unavailable — using built-in TA suggestions';}
+ }
+ syncTaLookup();
+ refreshLocationSelectors();
+}
+
+
+let records=[], filtered=[], checkIssues=[];
+const $=id=>document.getElementById(id);
+const ids=['aDate','aSeason','aHazard','aEvent','aDistrict','aTA','aVillage','aHH','aMembers','aAffected','aInjured','aDeaths','aDisplaced','aHouse','aCrop','aHouseLoss','aCropLoss','aNeeds','aNotes','aLat','aLon','aStatus','aAssessor'];
+const num=v=>{const n=Number(v);return Number.isFinite(n)&&n>=0?n:0};
+const txt=v=>String(v??'').trim();
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'MWK '+num(n).toLocaleString('en-US',{maximumFractionDigits:0});
+const today=()=>new Date().toISOString().slice(0,10);
+function notify(msg){/* Bottom toast notifications are disabled for the final interface. */}
+
+function setupMalawiLocations(){
+ refreshLocationSelectors();
+ $('mapDistrict').addEventListener('change',renderMap);
+ $('mapTA').addEventListener('input',renderMap);
+}
+function selectedTAValue(){return txt($('aTA').value)}
+
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');records=Array.isArray(x)?x:[]}catch(e){records=[]}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(records));return true}catch(e){notify('Could not save. Export a backup and check browser storage.');return false}}
+function uid(){return 'VRM25-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase()}
+function unique(arr){return [...new Set(arr.map(txt).filter(Boolean))].sort((a,b)=>a.localeCompare(b))}
+function selectedRecords(){const d=$('fDistrict').value,ta=$('fTA').value,h=$('fHazard').value,s=$('fSeason').value;return records.filter(r=>(!d||r.district===d)&&(!ta||normTA(r.ta).includes(normTA(ta)))&&(!h||r.hazard===h)&&(!s||r.season===s))}
+function seasonSort(a,b){return b.localeCompare(a,undefined,{numeric:true})}
+function fillSelect(id,vals,allLabel){const el=$(id),old=el.value;el.innerHTML='<option value="">'+esc(allLabel)+'</option>'+vals.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');if(vals.includes(old))el.value=old}
+function refreshFilters(){
+ fillSelect('fDistrict',unique(records.map(r=>r.district)),'All districts');
+ fillSelect('fHazard',unique(records.map(r=>r.hazard)),'All hazards');
+ fillSelect('fSeason',unique(records.map(r=>r.season)).sort(seasonSort),'All seasons');
+ fillSelect('recordSeason',unique(records.map(r=>r.season)).sort(seasonSort),'All seasons');
+ fillSelect('seasonOne',unique(records.map(r=>r.season)).sort(seasonSort),'Choose season');
+ fillSelect('seasonTwo',unique(records.map(r=>r.season)).sort(seasonSort),'Choose season');
+ fillSelect('mapHazard',unique(records.map(r=>r.hazard)),'All hazards');
+ fillSelect('mapSeason',unique(records.map(r=>r.season)).sort(seasonSort),'All seasons');
+ refreshLocationSelectors();
+}
+function normTA(v){return txt(v).replace(/^t\s*\/?\s*a\.?\s*/i,'').trim().toLowerCase()}
+function villageKey(r){return [txt(r.district).toLowerCase(),txt(r.ta).toLowerCase(),txt(r.village).toLowerCase()].join('|')}
+function villageName(r){return [r.village,r.ta,r.district].filter(Boolean).join(' · ')}
+function isDamaged(r){return ['Partial','Severe','Destroyed'].includes(r.houseDamage)}
+function summary(list){
+ const villages=new Map(); list.forEach(r=>{const k=villageKey(r);if(!villages.has(k))villages.set(k,{key:k,name:villageName(r),district:r.district,ta:r.ta,village:r.village,records:0,hh:new Set(),damaged:0,people:0,injured:0,deaths:0,displaced:0,cropLoss:0,houseLoss:0,seasons:new Set(),hazards:new Set(),coords:[]});
+ const v=villages.get(k);v.records++;if(r.householdId)v.hh.add(r.householdId.toLowerCase());if(isDamaged(r))v.damaged++;v.people+=num(r.affected);v.injured+=num(r.injured);v.deaths+=num(r.deaths);v.displaced+=num(r.displaced);v.cropLoss+=num(r.cropLoss);v.houseLoss+=num(r.houseLoss);v.seasons.add(r.season);v.hazards.add(r.hazard);if(validCoords(r))v.coords.push([Number(r.lat),Number(r.lon)]);});
+ return [...villages.values()].map(v=>({...v,households:v.hh.size,seasonsList:[...v.seasons].sort(seasonSort),hazardsList:[...v.hazards]}));
+}
+function validCoords(r){return r.lat!==''&&r.lon!==''&&Number.isFinite(Number(r.lat))&&Number.isFinite(Number(r.lon))&&Number(r.lat)>=-90&&Number(r.lat)<=90&&Number(r.lon)>=-180&&Number(r.lon)<=180}
+function renderDashboard(){
+ const list=selectedRecords(),v=summary(list);$('mRecords').textContent=list.length.toLocaleString();$('mVillages').textContent=v.length.toLocaleString();$('mHomes').textContent=list.filter(isDamaged).length.toLocaleString();$('mPeople').textContent=list.reduce((s,r)=>s+num(r.affected),0).toLocaleString();$('mInjured').textContent=list.reduce((s,r)=>s+num(r.injured),0).toLocaleString();$('mDeaths').textContent=list.reduce((s,r)=>s+num(r.deaths),0).toLocaleString();$('mCrop').textContent=money(list.reduce((s,r)=>s+num(r.cropLoss),0));$('mLoss').textContent=money(list.reduce((s,r)=>s+num(r.cropLoss)+num(r.houseLoss),0));
+ const top=v.sort((a,b)=>(b.people+b.damaged*2+b.deaths*10+b.injured*3)-(a.people+a.damaged*2+a.deaths*10+a.injured*3)).slice(0,7),max=Math.max(1,...top.map(x=>x.people+x.damaged*2+x.deaths*10+x.injured*3));
+ $('topVillages').innerHTML=top.length?top.map(x=>{const score=x.people+x.damaged*2+x.deaths*10+x.injured*3;return '<div class="barrow"><div title="'+esc(x.name)+'">'+esc(x.village||'Unnamed')+'</div><div class="bartrack"><div class="barfill" style="width:'+Math.max(2,score/max*100)+'%"></div></div><strong>'+score+'</strong></div>'}).join(''):'<div class="empty">No records match the current filters.</div>';
+}
+function issuesFor(list){
+ const out=[];const seen=new Map();
+ list.forEach((r,i)=>{
+  if(!r.district||!r.ta||!r.village)out.push({id:r.id,msg:'Missing district, TA or village',key:r.id});
+  if(!r.householdId)out.push({id:r.id,msg:'Missing household / assessment ID',key:r.id});
+  if(!r.season)out.push({id:r.id,msg:'Missing season',key:r.id});
+  if(!validCoords(r)&&(r.lat||r.lon))out.push({id:r.id,msg:'Incomplete or invalid GPS coordinates',key:r.id});
+  if(num(r.injured)+num(r.deaths)>num(r.affected)&&num(r.affected)>0)out.push({id:r.id,msg:'Injuries + deaths exceed affected people',key:r.id});
+  if(num(r.affected)>num(r.members)&&num(r.members)>0)out.push({id:r.id,msg:'Affected people exceed household members',key:r.id});
+  const k=[txt(r.district).toLowerCase(),txt(r.ta).toLowerCase(),txt(r.village).toLowerCase(),txt(r.householdId).toLowerCase(),txt(r.season).toLowerCase(),txt(r.hazard).toLowerCase()].join('|');
+  if(r.householdId){if(seen.has(k)){out.push({id:r.id,msg:'Possible duplicate household/event/season record',key:r.id});}else seen.set(k,r.id)}
+ });
+ return out;
+}
+function runChecks(){
+ checkIssues=issuesFor(selectedRecords());const counts={};checkIssues.forEach(i=>counts[i.msg]=(counts[i.msg]||0)+1);
+ $('qualitySummary').innerHTML=checkIssues.length?'<div class="notice warn"><strong>'+checkIssues.length+' flag(s) need review</strong><ul>'+Object.entries(counts).map(([k,n])=>'<li>'+esc(k)+': '+n+'</li>').join('')+'</ul><span class="smalltext">Flags are not proof of error or misconduct.</span></div>':'<div class="notice">No issues detected by the basic checks. This does not mean records have been independently verified.</div>';
+}
+function renderRecords(){
+ const search=txt($('recordSearch').value).toLowerCase(),status=$('recordStatus').value,season=$('recordSeason').value;
+ filtered=records.filter(r=>(!search||[r.district,r.ta,r.village,r.householdId,r.hazard,r.event,r.assessor].join(' ').toLowerCase().includes(search))&&(!status||r.status===status)&&(!season||r.season===season)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+ $('recordCount').textContent=filtered.length+' record(s) shown · '+records.length+' saved total';
+ $('recordRows').innerHTML=filtered.map(r=>'<tr><td>'+esc(r.date)+'<br><span class="smalltext">'+esc(r.season)+'</span></td><td><strong>'+esc(r.village)+'</strong><br>'+esc(r.ta)+'<br><span class="smalltext">'+esc(r.district)+'</span></td><td>'+esc(r.hazard)+(r.event?'<br><span class="smalltext">'+esc(r.event)+'</span>':'')+'</td><td>'+num(r.affected)+' affected<br>'+num(r.injured)+' injured · '+num(r.deaths)+' deaths<br>'+esc(r.houseDamage)+' house damage</td><td>'+money(num(r.houseLoss)+num(r.cropLoss))+'</td><td><span class="tag '+(r.status==='Verified'?'':'amber')+'">'+esc(r.status)+'</span></td><td class="noprint"><div class="inline"><button class="small secondary" data-edit="'+esc(r.id)+'">Edit</button><button class="small danger" data-delete="'+esc(r.id)+'">Delete</button></div></td></tr>').join('');
+ $('recordsEmpty').classList.toggle('hide',filtered.length>0);
+}
+function renderVillages(){
+ const list=selectedRecords(),v=summary(list).sort((a,b)=>b.people-a.people);
+ $('villageRows').innerHTML=v.map(x=>'<tr><td><strong>'+esc(x.village)+'</strong><br><span class="smalltext">'+esc(x.ta)+' · '+esc(x.district)+'</span></td><td>'+x.records+'</td><td>'+x.households+'</td><td>'+x.damaged+'</td><td>'+x.people+'</td><td>'+x.deaths+'</td><td>'+money(x.cropLoss)+'</td><td>'+esc(x.seasonsList.join(', '))+'</td></tr>').join('');
+ $('villageEmpty').classList.toggle('hide',v.length>0);
+}
+
+let leafletMap=null, leafletLayer=null, leafletMarkers=[];
+function initLeafletMap(){
+ if(leafletMap || !window.L) return !!leafletMap;
+ const box=$('mapBox');box.innerHTML='';
+ leafletMap=L.map(box,{zoomControl:true}).setView([-13.5,34.0],6);
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(leafletMap);
+ leafletLayer=L.layerGroup().addTo(leafletMap);
+ $('mapMode').textContent='Interactive map · OpenStreetMap';
+ setTimeout(()=>leafletMap.invalidateSize(),250);
+ return true;
+}
+function renderMap(){
+ const district=$('mapDistrict')?.value||'',ta=$('mapTA')?.value||'',hazard=$('mapHazard').value,season=$('mapSeason').value;
+ const list=records.filter(r=>(!district||r.district===district)&&(!ta||normTA(r.ta).includes(normTA(ta)))&&(!hazard||r.hazard===hazard)&&(!season||r.season===season)&&validCoords(r));
+ const box=$('mapBox');
+ if(window.L && initLeafletMap()){
+  leafletLayer.clearLayers();
+  if(!list.length){$('mapCount').textContent='0 GPS points';$('mapSummary').textContent='No saved records with valid GPS coordinates match these filters.';leafletMap.setView([-13.5,34.0],6);return}
+  const bounds=[];
+  list.forEach(r=>{
+   const impact=num(r.deaths)*10+num(r.injured)*3+num(r.affected)+(isDamaged(r)?5:0);
+   const color=impact>=20?'#a93226':impact>=8?'#a16b00':'#155b3b';
+   const marker=L.circleMarker([Number(r.lat),Number(r.lon)],{radius:8,color:'#fff',weight:2,fillColor:color,fillOpacity:.95}).bindPopup('<strong>'+esc(r.village)+'</strong><br>'+esc(r.ta)+' · '+esc(r.district)+'<br>'+esc(r.hazard)+' · '+esc(r.date)+'<br>Affected: '+num(r.affected)+' · Injured: '+num(r.injured)+' · Deaths: '+num(r.deaths)+'<br><small>Record status: '+esc(r.status)+'</small>');
+   marker.addTo(leafletLayer);bounds.push([Number(r.lat),Number(r.lon)]);
+  });
+  if(bounds.length===1)leafletMap.setView(bounds[0],13);else leafletMap.fitBounds(bounds,{padding:[30,30],maxZoom:12});
+  $('mapCount').textContent=list.length+' mapped assessment point(s)';
+  $('mapSummary').textContent='Map shows '+list.length+' saved assessment record(s) with GPS coordinates. Pins may overlap when multiple assessments share a village point.';
+  $('mapMode').textContent='Interactive map · OpenStreetMap';
+  return;
+ }
+ // Offline fallback: plot actual coordinates on a schematic grid.
+ box.innerHTML='';
+ $('mapMode').textContent='Offline coordinate view';
+ if(!list.length){box.innerHTML='<div class="mapnote">No valid GPS coordinates match these filters. Capture GPS or enter coordinates in an assessment.</div>';$('mapCount').textContent='0 mapped points';$('mapSummary').textContent='When online, the real map loads automatically. This fallback is not a geographic basemap.';return}
+ const lats=list.map(r=>Number(r.lat)),lons=list.map(r=>Number(r.lon)),minLat=Math.min(...lats),maxLat=Math.max(...lats),minLon=Math.min(...lons),maxLon=Math.max(...lons);
+ list.forEach(r=>{const x=maxLon===minLon?50:8+(Number(r.lon)-minLon)/(maxLon-minLon)*84,y=maxLat===minLat?48:12+(maxLat-Number(r.lat))/(maxLat-minLat)*72,impact=num(r.deaths)*10+num(r.injured)*3+num(r.affected)+(isDamaged(r)?5:0);const pin=document.createElement('button');pin.className='pin '+(impact>=20?'high':impact>=8?'mid':'');pin.style.left=x+'%';pin.style.top=y+'%';pin.title=[r.village,r.hazard,r.date,'Affected: '+num(r.affected)].join(' | ');pin.textContent=r.village||'Record';pin.onclick=()=>notify((r.village||'Village')+' · '+r.ta+' · '+r.district+' · '+r.hazard+' · '+num(r.affected)+' affected');box.appendChild(pin)});
+ const note=document.createElement('div');note.className='mapnote';note.textContent=list.length+' GPS assessment point(s) · offline coordinate plot, not a geographic basemap';box.appendChild(note);
+ $('mapCount').textContent=list.length+' mapped assessment point(s)';$('mapSummary').textContent='Coordinates span '+minLat.toFixed(4)+' to '+maxLat.toFixed(4)+' latitude and '+minLon.toFixed(4)+' to '+maxLon.toFixed(4)+' longitude.';
+}
+
+function renderAll(){refreshFilters();renderDashboard();renderRecords();renderVillages();renderMap()}
+function setView(name){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===name));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===name));if(name==='records')renderRecords();if(name==='villages')renderVillages();if(name==='map')renderMap();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
+document.getElementById('startAssessment').addEventListener('click',()=>{resetForm();setView('assessment')});
+document.getElementById('jumpSaved').addEventListener('click',()=>setView('records'));
+
+function resetForm(){ $('assessmentForm').reset();$('aDate').value=today();$('aMembers').value='0';['aAffected','aInjured','aDeaths','aDisplaced','aHouseLoss','aCropLoss'].forEach(id=>$(id).value='0');$('editKey').value='';$('formHeading').textContent='Add a disaster impact record';$('saveBtn').textContent='Save record';$('cancelEditBtn').classList.add('hide');$('formMsg').classList.add('hide')}
+function formData(){
+ const v={id:$('editKey').value||uid()};ids.forEach(id=>{const k=({aDate:'date',aSeason:'season',aHazard:'hazard',aEvent:'event',aDistrict:'district',aTA:'ta',aVillage:'village',aHH:'householdId',aMembers:'members',aAffected:'affected',aInjured:'injured',aDeaths:'deaths',aDisplaced:'displaced',aHouse:'houseDamage',aCrop:'cropDamage',aHouseLoss:'houseLoss',aCropLoss:'cropLoss',aNeeds:'needs',aNotes:'notes',aLat:'lat',aLon:'lon',aStatus:'status',aAssessor:'assessor'})[id];v[k]=$(id).value.trim()});
+ v.ta=selectedTAValue();
+ ['members','affected','injured','deaths','displaced','houseLoss','cropLoss'].forEach(k=>v[k]=num(v[k]));
+ v.createdAt=records.find(r=>r.id===v.id)?.createdAt||new Date().toISOString();v.updatedAt=new Date().toISOString();return v;
+}
+$('assessmentForm').addEventListener('submit',e=>{
+ e.preventDefault();const r=formData();
+ if(r.injured+r.deaths>r.affected){if(!confirm('Injuries plus deaths exceed the number of people affected. Save anyway after checking the source?'))return}
+ if(r.members>0&&r.affected>r.members){if(!confirm('People affected exceed household members. If this record covers one household, verify the figures. Save anyway?'))return}
+ if((r.lat&&!r.lon)||(!r.lat&&r.lon)){notify('Enter both latitude and longitude, or leave both blank.');return}
+ if(r.lat!==''&&r.lon!==''&&!validCoords(r)){notify('GPS coordinates are outside valid ranges.');return}
+ const ix=records.findIndex(x=>x.id===r.id);if(ix>=0)records[ix]=r;else records.push(r);
+ if(persist()){notify(ix>=0?'Assessment updated':'Assessment saved on this device');resetForm();renderAll();setView('records')}
+});
+$('clearFormBtn').onclick=resetForm;$('cancelEditBtn').onclick=resetForm;
+function editRecord(id){
+ const r=records.find(x=>x.id===id);if(!r)return;
+ const map={date:'aDate',season:'aSeason',hazard:'aHazard',event:'aEvent',district:'aDistrict',village:'aVillage',householdId:'aHH',members:'aMembers',affected:'aAffected',injured:'aInjured',deaths:'aDeaths',displaced:'aDisplaced',houseDamage:'aHouse',cropDamage:'aCrop',houseLoss:'aHouseLoss',cropLoss:'aCropLoss',needs:'aNeeds',notes:'aNotes',lat:'aLat',lon:'aLon',status:'aStatus',assessor:'aAssessor'};
+ Object.entries(map).forEach(([k,id])=>$(id).value=r[k]??'');
+ $('aDistrict').value=cleanDistrictName(r.district);
+ $('aTA').value=r.ta||'';
+ $('editKey').value=r.id;$('formHeading').textContent='Edit assessment';$('saveBtn').textContent='Save changes';$('cancelEditBtn').classList.remove('hide');setView('assessment');
+}
+function deleteRecord(id){const r=records.find(x=>x.id===id);if(!r||!confirm('Delete assessment for '+r.village+' ('+r.householdId+')? This cannot be undone without a backup.'))return;records=records.filter(x=>x.id!==id);persist();renderAll();notify('Record deleted')}
+$('recordRows').addEventListener('click',e=>{const edit=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(edit)editRecord(edit.dataset.edit);if(del)deleteRecord(del.dataset.delete)});
+$('newBtn').onclick=$('recordsNewBtn').onclick=()=>{resetForm();setView('assessment')};
+['fDistrict','fTA','fHazard','fSeason'].forEach(id=>$(id).addEventListener(id==='fTA'?'input':'change',()=>{renderDashboard();renderVillages()}));
+['recordSearch','recordStatus','recordSeason'].forEach(id=>$(id).addEventListener('input',renderRecords));
+$('resetRecordFilters').onclick=()=>{$('recordSearch').value='';$('recordStatus').value='';$('recordSeason').value='';renderRecords()};
+$('runChecksBtn').onclick=runChecks;$('goRecordsBtn').onclick=()=>setView('records');
+$('mapHazard').onchange=renderMap;$('mapSeason').onchange=renderMap;
+function captureGPS(){
+ const readout=$('gpsReadout');
+ if(!navigator.geolocation){readout.textContent='Location is not available in this browser. Open in Chrome or enter coordinates manually.';notify('Location service unavailable.');return}
+ readout.textContent='Requesting phone location… Keep Location switched on and allow browser permission.';
+ let finished=false;
+ const success=pos=>{if(finished)return;finished=true;$('aLat').value=pos.coords.latitude.toFixed(6);$('aLon').value=pos.coords.longitude.toFixed(6);const acc=Math.round(pos.coords.accuracy||0);readout.textContent='GPS captured ✓ Accuracy estimate: '+acc+' m. Check the location before saving.';notify('GPS coordinates captured. Accuracy about '+acc+' m.');renderMap();};
+ const fail=err=>{if(finished)return;if(err.code===1){finished=true;const msg='Location permission denied. Allow location access for this browser in phone settings, then try again.';readout.textContent=msg;notify(msg);return;}
+   readout.textContent='High-accuracy GPS was slow; trying phone/network location…';
+   navigator.geolocation.getCurrentPosition(success,err2=>{if(finished)return;finished=true;const msg=err2.code===2?'Phone could not determine location. Turn on Location and try outdoors.':(!window.isSecureContext&&location.protocol!=='file:')?'GPS may require an HTTPS page. Open this app from a secure HTTPS address.':'Could not get location yet. Turn on Location, allow permission, wait outdoors and retry.';readout.textContent=msg;notify(msg);},{enableHighAccuracy:false,timeout:30000,maximumAge:60000});
+ };
+ if(!window.isSecureContext&&location.protocol!=='file:')readout.textContent='This page may block GPS unless opened through HTTPS. Trying anyway…';
+ navigator.geolocation.getCurrentPosition(success,fail,{enableHighAccuracy:true,timeout:25000,maximumAge:0});
+}
+$('gpsBtn').onclick=captureGPS;
+function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+const csvFields=['id','date','season','hazard','event','district','ta','village','householdId','members','affected','injured','deaths','displaced','houseDamage','cropDamage','houseLoss','cropLoss','needs','notes','lat','lon','status','assessor','createdAt','updatedAt'];
+function exportCsv(list,name){const lines=[csvFields.map(csvCell).join(',')];list.forEach(r=>lines.push(csvFields.map(k=>csvCell(r[k])).join(',')));download(name,lines.join('\r\n'),'text/csv;charset=utf-8');notify('CSV export created')}
+$('allCsvBtn').onclick=()=>exportCsv(records,'village-risk-mapper-all-records.csv');
+$('recordsExportBtn').onclick=()=>exportCsv(filtered,'village-risk-mapper-filtered-records.csv');
+$('mapCsvBtn').onclick=()=>exportCsv(records.filter(validCoords),'village-risk-mapper-coordinates.csv');
+function villageCsv(list){const rows=summary(list);const fields=['district','ta','village','records','households','damaged','people','injured','deaths','displaced','cropLoss','houseLoss','seasonsList','hazardsList'];const lines=[fields.map(csvCell).join(',')];rows.forEach(r=>lines.push(fields.map(k=>csvCell(Array.isArray(r[k])?r[k].join('; '):r[k])).join(',')));download('village-risk-mapper-village-summary.csv',lines.join('\r\n'),'text/csv;charset=utf-8')}
+$('villageCsvBtn').onclick=()=>villageCsv(selectedRecords());
+$('backupBtn').onclick=()=>download('village-risk-mapper-backup-'+today()+'.json',JSON.stringify({app:'Village Risk Mapper',version:31,exportedAt:new Date().toISOString(),records},null,2),'application/json');
+$('restoreBtn').onclick=async()=>{const f=$('restoreFile').files[0];if(!f){notify('Choose a JSON backup file first.');return}try{const obj=JSON.parse(await f.text()),incoming=Array.isArray(obj)?obj:obj.records;if(!Array.isArray(incoming))throw new Error('No records array found');if(!confirm('Merge '+incoming.length+' records into the current device? Matching record IDs will be replaced.'))return;const m=new Map(records.map(r=>[r.id,r]));incoming.forEach(r=>{if(r&&r.id)m.set(r.id,r)});records=[...m.values()];persist();renderAll();notify('Backup merged. Review the record totals.')}catch(e){notify('Backup could not be read: '+e.message)}};
+$('clearAllBtn').onclick=()=>{if(!confirm('Delete ALL local records from this app on this device? Export a backup first.'))return;if(!confirm('Final confirmation: permanently delete '+records.length+' saved records?'))return;records=[];persist();renderAll();notify('All local records deleted')};
+function compare(){
+ const a=$('seasonOne').value,b=$('seasonTwo').value;if(!a||!b){notify('Choose both seasons first.');return}if(a===b){notify('Choose two different seasons.');return}
+ const list=selectedRecords(),aa=summary(list.filter(r=>r.season===a)),bb=summary(list.filter(r=>r.season===b)),mapA=new Map(aa.map(v=>[v.key,v])),mapB=new Map(bb.map(v=>[v.key,v])),keys=new Set([...mapA.keys(),...mapB.keys()]);
+ const rows=[...keys].map(k=>{const x=mapA.get(k),y=mapB.get(k),base=x||y;return {name:base.name,a:x,b:y,da:x?.damaged??null,db:y?.damaged??null,pa:x?.people??null,pb:y?.people??null,la:x?x.houseLoss+x.cropLoss:null,lb:y?y.houseLoss+y.cropLoss:null}}).sort((x,y)=>((y.pb||0)+(y.db||0)*2)-((x.pb||0)+(x.db||0)*2));
+ $('comparisonOutput').innerHTML='<div class="seasoncompare"><div class="comparebox"><span class="smalltext">'+esc(a)+'</span><strong>'+aa.length+' villages recorded</strong><span class="smalltext">'+list.filter(r=>r.season===a).length+' assessment records</span></div><div class="comparebox"><span class="smalltext">'+esc(b)+'</span><strong>'+bb.length+' villages recorded</strong><span class="smalltext">'+list.filter(r=>r.season===b).length+' assessment records</span></div></div><div class="notice warn">A blank / em dash means no record for that village in that season, not zero impact. Changes may reflect different coverage, hazard severity or assessment methods.</div><div class="tablewrap"><table><thead><tr><th>Village</th><th>'+esc(a)+' damaged records</th><th>'+esc(b)+' damaged records</th><th>'+esc(a)+' people affected</th><th>'+esc(b)+' people affected</th><th>'+esc(a)+' estimated loss</th><th>'+esc(b)+' estimated loss</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(r.name)+'</td><td>'+(r.da===null?'—':r.da)+'</td><td>'+(r.db===null?'—':r.db)+'</td><td>'+(r.pa===null?'—':r.pa)+'</td><td>'+(r.pb===null?'—':r.pb)+'</td><td>'+(r.la===null?'—':money(r.la))+'</td><td>'+(r.lb===null?'—':money(r.lb))+'</td></tr>').join('')+'</tbody></table></div>';
+}
+$('compareBtn').onclick=compare;
+function reportHtml(){
+ const list=selectedRecords(),v=summary(list).sort((a,b)=>b.people-a.people),district=$('fDistrict').value||'All districts',ta=$('fTA').value||'All TAs',hazard=$('fHazard').value||'All hazards',season=$('fSeason').value||'All seasons';
+ const rows=v.map(x=>'<tr><td>'+esc(x.name)+'</td><td>'+x.records+'</td><td>'+x.damaged+'</td><td>'+x.people+'</td><td>'+x.injured+'</td><td>'+x.deaths+'</td><td>'+money(x.houseLoss+x.cropLoss)+'</td></tr>').join('');
+ return '<!doctype html><html><head><meta charset="utf-8"><title>Disaster Damage Calculator Situation Report</title><style>body{font:13px Arial;margin:28px;color:#222}h1{font-size:24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ccc;padding:7px;text-align:left}th{background:#eee}.note{background:#fff5d9;padding:10px}</style></head><body><h1>Disaster Impact Situation Summary</h1><p>Generated: '+new Date().toLocaleString()+'</p><p>Filters: '+esc(district)+' · '+esc(ta)+' · '+esc(hazard)+' · '+esc(season)+'</p><h2>Overview</h2><p>Assessment records: '+list.length+' | Villages recorded: '+v.length+' | Damaged-house records: '+list.filter(isDamaged).length+' | People affected: '+list.reduce((s,r)=>s+num(r.affected),0)+' | Injuries reported: '+list.reduce((s,r)=>s+num(r.injured),0)+' | Deaths reported: '+list.reduce((s,r)=>s+num(r.deaths),0)+' | Estimated loss: '+money(list.reduce((s,r)=>s+num(r.houseLoss)+num(r.cropLoss),0))+'</p><h2>Village summary</h2><table><thead><tr><th>Village</th><th>Records</th><th>House damage records</th><th>Affected people</th><th>Injuries</th><th>Deaths</th><th>Estimated losses</th></tr></thead><tbody>'+rows+'</tbody></table><h2>Limitations and verification</h2><div class="note">This report summarises information entered by users. Information has not been independently verified and should not be the sole basis for relief eligibility or official loss declarations. Check duplicate records, source forms, assessment coverage, valuation assumptions and official reporting requirements. Protect personal and sensitive information.</div><p>Disaster Damage Calculator · Disaster impact summary</p><script>window.onload=()=>window.print()<\/script>
+<script>
+// Register the offline app shell. Requires HTTPS or localhost when hosted.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('./sw.js').catch(function (err) {
+      console.warn('Offline support could not be enabled:', err);
+    });
+  });
+}
+</script>
+
+</body></html>';
+}
+$('printReportBtn').onclick=()=>{const w=window.open('','_blank');if(!w){download('village-risk-mapper-situation-report.html',reportHtml(),'text/html;charset=utf-8');notify('Pop-up blocked; report HTML downloaded instead.');return}w.document.open();w.document.write(reportHtml());w.document.close()};
+
+$('aDate').value=today();
+window.addEventListener('load',()=>setTimeout(()=>{if(window.L)renderMap()},300));
+setupMalawiLocations();load();renderAll();
+})();
+</script>
+</body></html>
